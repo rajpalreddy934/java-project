@@ -1,0 +1,92 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CurrencyConverterGUI {
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Currency Converter");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+
+        // Labels
+        JLabel amountLabel = new JLabel("Enter amount in INR:");
+        amountLabel.setBounds(50, 30, 150, 30);
+        frame.add(amountLabel);
+
+        JLabel resultLabel = new JLabel("Converted Amount:");
+        resultLabel.setBounds(50, 130, 150, 30);
+        frame.add(resultLabel);
+
+        // Text Field for input
+        JTextField amountField = new JTextField();
+        amountField.setBounds(180, 30, 150, 30);
+        frame.add(amountField);
+
+        // Combo Box for currency selection
+        String[] currencies = {"USD (US Dollar)", "EUR (Euro)", "GBP (British Pound)", "JPY (Japanese Yen)"};
+        JComboBox<String> currencyComboBox = new JComboBox<>(currencies);
+        currencyComboBox.setBounds(180, 80, 150, 30);
+        frame.add(currencyComboBox);
+
+        // Label for displaying the result
+        JLabel convertedAmountLabel = new JLabel("");
+        convertedAmountLabel.setBounds(180, 130, 150, 30);
+        frame.add(convertedAmountLabel);
+
+        // Button to perform the conversion
+        JButton convertButton = new JButton("Convert");
+        convertButton.setBounds(150, 180, 100, 30);
+        frame.add(convertButton);
+
+        // Conversion logic on button click
+        convertButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double amountINR = Double.parseDouble(amountField.getText());
+                    if (amountINR <= 0) {
+                        JOptionPane.showMessageDialog(frame, "Please enter a positive amount.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    double convertedAmount = 0;
+                    String targetCurrency = "";
+                    String selectedCurrency = (String) currencyComboBox.getSelectedItem();
+
+                    final double INR_TO_USD = 0.012;
+                    final double INR_TO_EUR = 0.011;
+                    final double INR_TO_GBP = 0.0094;
+                    final double INR_TO_JPY = 1.68;
+
+                    switch (selectedCurrency) {
+                        case "USD (US Dollar)":
+                            convertedAmount = amountINR * INR_TO_USD;
+                            targetCurrency = "USD";
+                            break;
+                        case "EUR (Euro)":
+                            convertedAmount = amountINR * INR_TO_EUR;
+                            targetCurrency = "EUR";
+                            break;
+                        case "GBP (British Pound)":
+                            convertedAmount = amountINR * INR_TO_GBP;
+                            targetCurrency = "GBP";
+                            break;
+                        case "JPY (Japanese Yen)":
+                            convertedAmount = amountINR * INR_TO_JPY;
+                            targetCurrency = "JPY";
+                            break;
+                    }
+
+                    convertedAmountLabel.setText(String.format("%.2f %s", convertedAmount, targetCurrency));
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
